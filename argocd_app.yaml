@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-argocd
+  namespace: argocd
+spec:
+  project: defult
+
+  source:
+    repoURL: https://gitlab.com/yotam8252533/ferari_website.git
+    targetRevision: HEAD
+    path: k8s_project
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
