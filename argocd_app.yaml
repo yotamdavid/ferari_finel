@@ -4,7 +4,7 @@ metadata:
   name: myapp-argocd
   namespace: argocd
 spec:
-  project: defult
+  project: default
 
   source:
     repoURL: https://gitlab.com/yotam8252533/ferari_website.git
