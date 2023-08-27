@@ -4,6 +4,8 @@ This GitHub Actions workflow automates the building, testing, deploying, and mon
 This pipeline gives developers the option to deploy their app with a simple push.
 
 ## Workflow Overview
+![Uploading project image.png…]()
+
 
 🛠️ **Build**: The workflow starts with building a Docker image of the application, and pushing it to Docker Hub.
 
