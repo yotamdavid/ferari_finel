@@ -72,7 +72,7 @@ pipeline {
                 dir('ferari_finel/k8s_project') {
                     sh 'kubectl create namespace argocd'
                     sh 'kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml'
-                    sh 'kubectl get secret argocd-initial-admin-secret -n argocd -o yaml'
+                    sh 'echo "now edit the argocd service from ClusterIP to LoadBalancer"'
                     sh 'kubectl apply -f argocd_app.yaml'
                     sh 'chmod +x update_db.sh'
                     sh './update_db.sh'
