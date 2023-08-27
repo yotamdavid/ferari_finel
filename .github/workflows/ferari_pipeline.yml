@@ -12,8 +12,6 @@ jobs:
       - name: Clean Up
         run: |
           ls
-          rm -rf ferari_finel/
-          git clone https://github.com/yotamdavid/ferari_finel.git
           cd ferari_finel/web_project/
           docker rmi -f yotamdavid/app_ferari:latest
 
@@ -33,7 +31,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          cd ~/ferari_finel/web_project/
+          cd ~/web_project/
           docker build -t yotamdavid/app_ferari:1.${{ github.run_number }} -t yotamdavid/app_ferari:latest .
           docker push yotamdavid/app_ferari:1.${{ github.run_number }}
           docker push yotamdavid/app_ferari:latest
@@ -56,7 +54,7 @@ jobs:
       - name: Run k8s on Test Server
         run: |
           gcloud container clusters get-credentials test-cluster --project golden-system-393111 --region us-central1
-          cd ~/ferari_finel/k8s_project
+          cd ~/k8s_project
           kubectl apply -f db-deploy.yml
           kubectl apply -f db-service.yml
           kubectl apply -f app_deployment.yaml
@@ -86,7 +84,7 @@ jobs:
       - name: Run k8s on Prod Server
         run: |
           gcloud container clusters get-credentials ferari-web2 --project golden-system-393111 --region us-east1-b
-          cd ~/ferari_finel/k8s_project
+          cd ~/k8s_project
           kubectl create namespace argocd
           kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
           kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
