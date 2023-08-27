@@ -88,7 +88,7 @@ pipeline {
         stage('set a monitoring grafana') {
             steps {
                 sh 'gcloud container clusters get-credentials ferari-web2 --project golden-system-393111 --region us-east1-b'
-                sh 'kubectl create namespace monitoring'
+                sh 'kubectl get namespace monitoring > /dev/null 2>&1 && echo "Namespace monitoring already exists." || kubectl create namespace monitoring'
                 sh 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
                 sh 'helm repo update'
                 sh 'helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring'
