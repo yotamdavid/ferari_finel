@@ -6,17 +6,8 @@ on:
       - main
 
 jobs:
-  cleanup:
-    runs-on: ubuntu-latest  
-    steps:
-      - name: Clean Up
-        run: |
-          cd $GITHUB_WORKSPACE/ferari_finel/web_project
-          docker rmi -f yotamdavid/app_ferari:latest
-
   build:
     runs-on: ubuntu-latest
-    needs: cleanup
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
