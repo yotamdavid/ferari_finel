@@ -5,11 +5,9 @@ pipeline {
         stage('Clean Up') {
             steps {
                 // Clean Up Project Files And Clone Git - To Update The Project
-                sh 'rm -rf ferari_docker/'
                 sh 'rm-rf ferari_finel/'
                 sh 'git clone https://github.com/yotamdavid/ferari_finel.git'
-                sh 'git clone https://github.com/yotamdavid/ferari_docker.git'
-                dir('ferari_docker/web_project/') {
+                dir('fferari_finel/web_project/') {
                     // Deletes Previous Docker Images
                     sh 'docker rmi -f yotamdavid/app_ferari:latest'
                 }
@@ -18,7 +16,7 @@ pipeline {
 
         stage('Build And Push The Image To Docker Hub') {
             steps {
-                dir('ferari_docker/web_project') {
+                dir('ferari_finel/web_project') {
                     // Creates Docker Image
                     sh "docker build -t yotamdavid/app_ferari:1.${BUILD_NUMBER} -t yotamdavid/app_ferari:latest ."
                 }
@@ -34,13 +32,9 @@ pipeline {
         stage('Creating a Cluster') {
             steps {
                 // Runs tests from the main machine on the website
-                dir('ferari_docker/web_project') {
-                    sh 'rm -rf terraform'
-                    sh 'git clone https://github.com/yotamdavid/terraform.git'
-                    dir('terraform') {
-                        sh 'terraform init'
-                        sh 'terraform apply -auto-approve'
-                    }
+                dir('ferari_finel/') {
+                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve'
                 }
             }
         }
@@ -49,8 +43,6 @@ pipeline {
             steps {
                 // Runs tests from the main machine on the website
                 sh 'gcloud container clusters get-credentials test-cluster --project golden-system-393111 --region us-central1'
-                sh 'rm -rf k8s_project'
-                sh 'git clone https://github.com/yotamdavid/k8s_project.git'
                 dir('k8s_project') {
                     sh 'kubectl apply -f db-deploy.yml'
                     sh 'kubectl apply -f db-service.yml'
@@ -60,16 +52,13 @@ pipeline {
                     sh './update_db.sh'
                     sh 'chmod +x test.sh'
                     sh './test.sh'
-                    sh 'kubectl delete pods --all'
-                    sh 'kubectl delete services --all'
-                    sh 'kubectl delete deployments --all'
                 }
             }
         }
         
         stage('Destroy Test Server') {
             steps {
-                dir('ferari_docker/web_project/terraform') {
+                dir('ferari_finel/') {
                     sh 'terraform init'
                     sh 'terraform destroy -auto-approve'
                 }
