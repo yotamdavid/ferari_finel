@@ -6,6 +6,15 @@ on:
       - main
 
 jobs:
+  cleanup:
+    runs-on: ubuntu-latest  
+     - name: Clean Up
+      run: |
+        rm -rf ferari_finel/
+        git clone https://github.com/yotamdavid/ferari_finel.git
+        cd ferari_finel/web_project/
+        docker rmi -f yotamdavid/app_ferari:latest
+        
   build:
     runs-on: ubuntu-latest
     
@@ -20,37 +29,28 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       
-    - name: Clean Up
-      run: |
-        rm -rf ferari_docker/
-        rm -rf ferari_finel/
-        git clone https://github.com/yotamdavid/ferari_finel.git
-        git clone https://github.com/yotamdavid/ferari_docker.git
-        cd ferari_docker/web_project/
-        docker rmi -f yotamdavid/app_ferari:latest
 
     - name: Build and Push Docker Image
       run: |
-        cd ferari_docker/web_project/
+        cd ferari_finel/web_project/
         docker build -t yotamdavid/app_ferari:1.${{ github.run_number }} -t yotamdavid/app_ferari:latest .
         docker push yotamdavid/app_ferari:1.${{ github.run_number }}
         docker push yotamdavid/app_ferari:latest
         docker image ls --format '{{.ID}}' yotamdavid/app_ferari --filter 'dangling=false' | sort -r | awk 'NR>4' | xargs -I {} docker image rm -f {}
-    
+
+  create_test_cluster:
+    runs-on: ubuntu-latest
     - name: Create a Cluster
       run: |
-        cd ferari_docker/web_project/
-        rm -rf terraform
-        git clone https://github.com/yotamdavid/terraform.git
-        cd terraform
+        cd ferari_finel/
         terraform init
         terraform apply -auto-approve
-
+        
+  testing:
+    runs-on: ubuntu-latest
     - name: Run k8s on Test Server
       run: |
         gcloud container clusters get-credentials test-cluster --project golden-system-393111 --region us-central1
-        rm -rf k8s_project
-        git clone https://github.com/yotamdavid/k8s_project.git
         cd k8s_project
         kubectl apply -f db-deploy.yml
         kubectl apply -f db-service.yml
@@ -63,13 +63,17 @@ jobs:
         kubectl delete pods --all
         kubectl delete services --all
         kubectl delete deployments --all
-    
+        
+  destroy_test_server:
+    runs-on: ubuntu-latest    
     - name: Destroy Test Server
       run: |
-        cd ferari_docker/web_project/terraform
+        cd ferari_docker/
         terraform init
         terraform destroy -auto-approve
-
+        
+  deploy_to_prod:
+    runs-on: ubuntu-latest
     - name: Run k8s on Prod Server
       run: |
         gcloud container clusters get-credentials ferari-web2 --project golden-system-393111 --region us-east1-b
@@ -80,7 +84,9 @@ jobs:
         kubectl apply -f argocd_app.yaml
         chmod +x update_db.sh
         ./update_db.sh
-
+        
+  monitor:
+    runs-on: ubuntu-latest
     - name: Set Up Monitoring
       run: |
         gcloud container clusters get-credentials ferari-web2 --project golden-system-393111 --region us-east1-b
