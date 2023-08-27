@@ -11,9 +11,7 @@ jobs:
     steps:
       - name: Clean Up
         run: |
-          rm -rf ferari_finel/
-          git clone https://github.com/yotamdavid/ferari_finel.git
-          cd ~/ferari_finel/web_project
+          cd ~/web_project
           docker rmi -f yotamdavid/app_ferari:latest
 
   build:
