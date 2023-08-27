@@ -8,7 +8,7 @@ on:
 jobs:
   cleanup:
     runs-on: ubuntu-latest  
-     - name: Clean Up
+    - name: Clean Up
       run: |
         rm -rf ferari_finel/
         git clone https://github.com/yotamdavid/ferari_finel.git
@@ -29,7 +29,6 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       
-
     - name: Build and Push Docker Image
       run: |
         cd ferari_finel/web_project/
