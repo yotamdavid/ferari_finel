@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Clean Up
         run: |
-          cd ~/web_project
+          cd $GITHUB_WORKSPACE/ferari_finel/web_project
           docker rmi -f yotamdavid/app_ferari:latest
 
   build:
@@ -30,7 +30,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          cd ~/web_project/
+          cd $GITHUB_WORKSPACE/ferari_finel/web_project
           docker build -t yotamdavid/app_ferari:1.${{ github.run_number }} -t yotamdavid/app_ferari:latest .
           docker push yotamdavid/app_ferari:1.${{ github.run_number }}
           docker push yotamdavid/app_ferari:latest
@@ -42,7 +42,7 @@ jobs:
     steps:
       - name: Create a Cluster
         run: |
-          cd ~/ferari_finel
+          cd $GITHUB_WORKSPACE/ferari_finel
           terraform init
           terraform apply -auto-approve
 
@@ -53,7 +53,7 @@ jobs:
       - name: Run k8s on Test Server
         run: |
           gcloud container clusters get-credentials test-cluster --project golden-system-393111 --region us-central1
-          cd ~/k8s_project
+          cd $GITHUB_WORKSPACE/ferari_finel/k8s_project
           kubectl apply -f db-deploy.yml
           kubectl apply -f db-service.yml
           kubectl apply -f app_deployment.yaml
@@ -62,9 +62,6 @@ jobs:
           ./update_db.sh
           chmod +x test.sh
           ./test.sh
-          kubectl delete pods --all
-          kubectl delete services --all
-          kubectl delete deployments --all
 
   destroy_test_server:
     runs-on: ubuntu-latest
@@ -72,7 +69,7 @@ jobs:
     steps:
       - name: Destroy Test Server
         run: |
-          cd ~/ferari_finel
+          cd $GITHUB_WORKSPACE/ferari_finel
           terraform init
           terraform destroy -auto-approve
 
@@ -83,7 +80,7 @@ jobs:
       - name: Run k8s on Prod Server
         run: |
           gcloud container clusters get-credentials ferari-web2 --project golden-system-393111 --region us-east1-b
-          cd ~/k8s_project
+          cd $GITHUB_WORKSPACE/ferari_finel/k8s_project
           kubectl create namespace argocd
           kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
           kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
