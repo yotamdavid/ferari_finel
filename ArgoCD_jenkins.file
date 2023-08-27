@@ -70,7 +70,7 @@ pipeline {
                 // Runs tests from the main machine on the website
                 sh 'gcloud container clusters get-credentials ferari-web2 --project golden-system-393111 --region us-east1-b'
                 dir('ferari_finel/k8s_project') {
-                    sh 'kubectl create namespace argocd'
+                    sh 'kubectl get namespace argocd > /dev/null 2>&1 && echo "Namespace argocd already exists." || kubectl create namespace argocd'
                     sh 'kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml'
                     sh 'echo "now edit the argocd service from ClusterIP to LoadBalancer"'
                     sh 'kubectl apply -f argocd_app.yaml'
