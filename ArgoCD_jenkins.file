@@ -88,13 +88,13 @@ pipeline {
         stage('set a monitoring grafana') {
             steps {
                 sh 'gcloud container clusters get-credentials ferari-web2 --project golden-system-393111 --region us-east1-b'
-                sh 'kubectl get namespace monitoring > /dev/null 2>&1 && echo "Namespace monitoring already exists." || kubectl create namespace monitoring'
+                sh 'kubectl get namespace monitor > /dev/null 2>&1 && echo "Namespace monitor already exists." || kubectl create namespace monitor'
                 sh 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
                 sh 'helm repo update'
-                sh 'helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring'
-                sh 'kubectl get pods -n monitoring'
-                sh 'kubectl get svc -n monitoring'
-                sh 'nohup kubectl port-forward svc/prometheus-kube-prometheus-prometheus -n monitoring 9090 &'
+                sh 'helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitor'
+                sh 'kubectl get pods -n monitor'
+                sh 'kubectl get svc -n monitor'
+                sh 'nohup kubectl port-forward svc/prometheus-kube-prometheus-prometheus -n monitor 9090 &'
                 sh 'echo "now edit the grafana service from ClusterIP to LoadBalancer"'
                 sh 'echo "The monitor has been set up successfully"'
 
