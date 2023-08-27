@@ -74,7 +74,11 @@ pipeline {
                     sh 'kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml'
                     sh 'echo "now edit the argocd service from ClusterIP to LoadBalancer"'
                     sh 'kubectl apply -f argocd_app.yaml'
-                    dir('ferari_finel/k8s_project') {
+                    dir('k8s_project') {
+                        sh 'kubectl apply -f db-deploy.yml'
+                        sh 'kubectl apply -f db-service.yml'
+                        sh 'kubectl apply -f app_deployment.yaml'
+                        sh 'kubectl apply -f app_service.yaml '
                         sh 'chmod +x update_db.sh'
                         sh './update_db.sh'
                     }
