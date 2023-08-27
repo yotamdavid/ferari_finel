@@ -14,22 +14,3 @@ This pipeline gives developers the option to deploy their app with a simple push
 🌐 **Deploy**: After successful testing, the application is deployed to a production cluster using ArgoCD.
 
 📈 **Monitor**: Finally, the monitoring components (Prometheus and Grafana) are installed on the production cluster.
-
-## Workflow Setup
-
-1. Ensure you have these credentials saved as secrets in your repository settings:
-
-   - `DOCKER_USERNAME`: Your Docker Hub username.
-   - `DOCKER_PASSWORD`: Your Docker Hub password.
-   - `API_KEY` : Your app API key , if there is a need
-   - `GCP_SERVICE_ACCOUNT_KEY`: Contents of your GCP service account key JSON file.
-
-2. Configure the required environment variables:
-
-   - `PROJECT_ID`: Your GCP project ID.
-   - `REGION`: Your server location.
-   - `SERVER_NAME`: Your server name.
-
-3. That's it! Push your code changes to the `main` branch to trigger the workflow.
-
-- GCP serverless Cloud Functions can be triggered automatically using an event trigger, but due to financial considerations, it is triggered manually during the `cleanups` job in the workflow.
