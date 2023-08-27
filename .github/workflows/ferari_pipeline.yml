@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Clean Up
         run: |
-          cd ~/web_project/
+          cd ~/ferari_finel/web_project
           docker rmi -f yotamdavid/app_ferari:latest
 
   build:
