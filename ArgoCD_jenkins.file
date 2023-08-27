@@ -73,8 +73,8 @@ pipeline {
                     sh 'kubectl get namespace argocd > /dev/null 2>&1 && echo "Namespace argocd already exists." || kubectl create namespace argocd'
                     sh 'kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml'
                     sh 'echo "now edit the argocd service from ClusterIP to LoadBalancer"'
-                    dir('ferari_finel/k8s_project/') {
-                        sh 'kubectl apply -f argocd_app.yaml'
+                    sh 'kubectl apply -f argocd_app.yaml'
+                    dir('ferari_finel/k8s_project') {
                         sh 'chmod +x update_db.sh'
                         sh './update_db.sh'
                     }
