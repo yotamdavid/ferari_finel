@@ -1,6 +1,6 @@
 # CI/CD Project
 
-Using the ArgoCD_Jenkins.file the building, testing, deploying, and monitoring process for a Kubernetes application using Docker, ArgoCD, and Google Cloud Platform (GCP) services. <br />
+Using the ArgoCD_Jenkins.file the building, testing, deploying, and monitoring process for a Kubernetes application using Docker,Terraform, ArgoCD, and Google Cloud Platform (GCP) services. <br />
 
 
 ## Workflow Overview
@@ -9,8 +9,8 @@ Using the ArgoCD_Jenkins.file the building, testing, deploying, and monitoring p
 
 🛠️ **Build**: Starts with building a Docker image of the application, and pushing it to Docker Hub.
 
-✅ **Test**: After building, the application is deployed to a test cluster that create with terraform, by using k8s.
+✅ **Test**: After building, the application is deployed to a test cluster that create with terraform, by using K8s.
 
-🌐 **Deploy**: After successful testing, the application is deployed to a production cluster using ArgoCD.
+🌐 **Deploy**: After successful testing, the application is deployed to a production cluster using ArgoCD and K8s.
 
 📈 **Monitor**: Finally, the monitoring components (Prometheus and Grafana) are installed on the production cluster.
