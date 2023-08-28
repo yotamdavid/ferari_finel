@@ -1,6 +1,6 @@
 # CI/CD Project
 
-Using the ArgoCDJenkins.file the building, testing, deploying, and monitoring process for a Kubernetes application using Docker, ArgoCD, and Google Cloud Platform (GCP) services. <br />
+Using the ArgoCD_Jenkins.file the building, testing, deploying, and monitoring process for a Kubernetes application using Docker, ArgoCD, and Google Cloud Platform (GCP) services. <br />
 
 
 ## Workflow Overview
