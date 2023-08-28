@@ -5,7 +5,6 @@ metadata:
   namespace: argocd
 spec:
   project: default
-
   source:
     repoURL: https://github.com/yotamdavid/ferari_finel.git
     targetRevision: HEAD
@@ -13,3 +12,14 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: default
+  syncPolicy:
+    automated:
+      prune: true # אופציונלי - להסיר משארית יישום כשהוא אינו קיים ב-Git
+      selfHeal: true # אופציונלי - לשקם יישום כשהוא נפל בקלאסטר
+    automated:
+      prune: true
+      selfHeal: true
+    hooks:
+      - name: sync-on-commit
+        beforeSync:
+          resources: []
