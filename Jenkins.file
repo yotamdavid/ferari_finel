@@ -7,7 +7,7 @@ pipeline {
                 // Clean Up Project Files And Clone Git - To Update The Project
                 sh 'rm -rf ferari_finel/'
                 sh 'git clone https://github.com/yotamdavid/ferari_finel.git'
-                dir('fferari_finel/web_project/') {
+                dir('ferari_finel/web_project/') {
                     // Deletes Previous Docker Images
                     sh 'docker rmi -f yotamdavid/app_ferari:latest'
                 }
